@@ -200,18 +200,17 @@
       tanh))
 
 ;; 13. ku-chang
-(play 102
-  (let [base 1]
-    (-> (map #(let [width (lin-lin (sin-osc:kr 1/20) -1 1 0 2)
-                    gate  (hold (* (impulse (+ 2 %3) %2)
-                                   (lf-pulse 1/4 %2 width)) 100 0 0)
-                    freq  (latch:kr (+ (* base %2) %1) gate)]
-                (* (sin-osc freq) (env-gen (env-perc 0.001 0.3) gate)))
-             (interleave (reductions * 300 (cycle [5/4 6/5]))
-                         (reductions * 900 (cycle [4/5 5/6])))
-             (n-range 0 3/2 12)
-             (cycle [1e-2 2e-3 5e-3 0]))
-        splay (* 12) tanh)))
+(play 54
+  (-> (map #(let [width (lin-lin (sin-osc:kr 1/20) -1 1 0 2)
+                  gate  (hold (* (impulse (+ 2 %3) %2)
+                                 (lf-pulse 1/4 %2 width)) 50 0 0)
+                  freq  (latch:kr (+ (* base %2) %1) gate)]
+              (* (sin-osc freq) (env-gen (env-perc 0.001 0.3) gate)))
+           (interleave (reductions * 300 (cycle [5/4 6/5]))
+                       (reductions * 900 (cycle [4/5 5/6])))
+           (n-range 0 3/2 12)
+           (cycle [1e-2 2e-3 5e-3 0]))
+      splay (* 12) tanh))
 
 ;; 14. aimlessly(night)
 (play 62
@@ -229,17 +228,16 @@
       tanh))
 
 ;; 15. yyyy.mm.dd
-(play 62
-  (-> (map #(* (sin-osc (lin-lin (lf-pulse (lin-exp (lf-noise2:kr 1/8)
-                                                    0 1
-                                                    1/10
-                                                    10))
-                                 0 1
-                                 %1 (* 4/5 %1)))
-               (hold (sin-osc %2) %3 30 0))
+(play 35
+      (-> (map #(* (sin-osc (* (lin-lin (lf-pulse (lin-exp (lf-noise2:kr 1/8)
+                                                           0 1
+                                                           1/10
+                                                           10))
+                                        0 1
+                                        %1 (* 4/5 %1))
+                               (env-gen (envelope [11/12 1 1 0] [0.04 %3 10] 12)))))
            (iterate #(* % 3/2) 200)
-           (n-range 1/32 1/16 8)
-           (n-range 0 30 8))
+           (n-range 10 20 8))
       splay
       (rotate-> (sin-osc 0.1))
       (free-verb 0.1 0.3)
