@@ -201,31 +201,28 @@
 
 ;; 13. ku-chang
 (play 54
-  (-> (map #(let [width (lin-lin (sin-osc:kr 1/20) -1 1 0 2)
-                  gate  (hold (* (impulse (+ 2 %3) %2)
-                                 (lf-pulse 1/4 %2 width)) 50 0 0)
-                  freq  (latch:kr (+ (* base %2) %1) gate)]
-              (* (sin-osc freq) (env-gen (env-perc 0.001 0.3) gate)))
-           (interleave (reductions * 300 (cycle [5/4 6/5]))
-                       (reductions * 900 (cycle [4/5 5/6])))
-           (n-range 0 3/2 12)
-           (cycle [1e-2 2e-3 5e-3 0]))
-      splay (* 12) tanh))
+      (-> (map #(let [gate (hold (* (impulse 2 %2)
+                                    (lf-pulse 1/8 %2 (lin-lin (lf-saw:kr 1/24 %2) -1 1 1/8 1))) 50 0 0)]
+                  (* (sin-osc %1) (env-gen (env-perc 0.001 0.3) gate)))
+               (interleave (reductions * 300 (cycle [5/4 6/5]))
+                           (reductions * 900 (cycle [4/5 5/6])))
+               (n-range 0 3/2 12))
+          splay (* 18) tanh))
 
 ;; 14. aimlessly(night)
 (play 62
-  (-> (map #(let [gate (hold (lag-ud %2 0.01 0.05) 60 0 0)
-                  ratio (demand:kr gate 0 (dseq [1 3/2 2/3] INF))]
-              (* (sin-osc (* % ratio)) gate))
-           (interleave (iterate #(* % 3/2) 150)
-                       (iterate #(* % 4/3) 300))
-           (map #(lf-pulse %1 %2 1/8)
-                (range 1/8 1/2 1/32)
-                (n-range 0 3 12)))
-      splay
-      (* 8)
-      free-verb
-      tanh))
+      (-> (map #(let [gate (hold (lag-ud %2 0.01 0.05) 60 0 0)
+                      ratio (demand:kr gate 0 (dseq [1 3/2 2/3] INF))]
+                  (* (sin-osc (* % ratio)) gate))
+               (interleave (iterate #(* % 3/2) 150)
+                           (iterate #(* % 4/3) 300))
+               (map #(lf-pulse %1 %2 1/8)
+                    (range 1/8 1/2 1/32)
+                    (n-range 0 3 12)))
+          splay
+          (* 8)
+          free-verb
+          tanh))
 
 ;; 15. yyyy.mm.dd
 (play 35
