@@ -77,7 +77,7 @@
       splay
       (* 8)
       (hold 55 2 0)
-      (switch-> (lin-lin (lf-saw [1/55 1/50] 1) -1 1 0 1) (free-verb 1 1))
+      (free-verb (lin-lin (lf-saw [1/55 1/50] 1) -1 1 0 1) 1)
       tanh))
 
 ;; 5. autocatalyst
